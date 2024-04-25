@@ -1,7 +1,7 @@
 import { AutoDetectTypes } from '@serialport/bindings-cpp';
 import { SerialPort } from 'serialport';
 import { SerialPortOpenOptions } from 'serialport/dist/index';
-import { Communicator } from '../utils/Communicator';
+import { Communicator } from './utils/Communicator';
 
 /**
  * Represents a communicator using the SerialPort library for communication with hardware devices.
