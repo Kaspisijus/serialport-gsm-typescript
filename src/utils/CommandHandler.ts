@@ -253,7 +253,10 @@ export class CommandHandler {
 				continue;
 			}
 
-			this.receivedCmdResponse.push(part);
+			// Kaspis hack fix hangup bug when RING command interrupts hangup process..
+			if (part.trim().toUpperCase() !== 'RING') {
+				this.receivedCmdResponse.push(part);
+			}
 
 			if ((part.trim().toUpperCase() === 'OK' || part.toUpperCase().includes('ERROR')) && this.receivedCmdResponse.length > 0) {
 				this.events.emit('onCommandResponse', this.receivedCmdResponse);
