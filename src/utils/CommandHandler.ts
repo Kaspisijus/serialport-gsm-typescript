@@ -62,7 +62,14 @@ export class CommandHandler {
 		this.isLocked = true;
 
 		if (item instanceof Command) {
-			await this.executeCMD(item);
+			this.modem.logger?.log(`---------\nexecuteCMD: ${item.ATCommand}, timeout: ${item.timeout}`)
+			await this.executeCMD(item)
+				.then((res) => {
+					this.modem.logger?.log(`finished: ${res}`)
+				})
+				.catch((err) => {
+					this.modem.logger?.log(`error: ${err}`)
+				})
 		} else {
 			for (const cmd of item.cmds) {
 				const result = await this.executeCMD(cmd);
@@ -93,7 +100,6 @@ export class CommandHandler {
 	 * @returns The command response or an error if the command fails.
 	 */
 	private async executeCMD(cmd: Command) {
-		this.modem.logger?.log(`executeCMD: ${cmd.ATCommand}`)
 
 		const result = await new Promise((resolve: (result: CommandResponse | Error) => void) => {
 			if (cmd.deprecated) {
