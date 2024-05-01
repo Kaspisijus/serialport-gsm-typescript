@@ -12,7 +12,7 @@ export class Modem {
 
 	// system
 	private readonly communicator: Communicator;
-	private readonly events = new Events();
+	private readonly events
 	private readonly cmdHandler: CommandHandler;
 	logger: Console | undefined;
 
@@ -28,6 +28,7 @@ export class Modem {
 		};
 		this.logger = options.logger
 
+		this.events = new Events(this.logger);
 		this.communicator = communicator;
 		this.cmdHandler = new CommandHandler(this, this.communicator, this.events);
 

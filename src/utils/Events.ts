@@ -2,8 +2,11 @@ import { EventEmitter } from 'events';
 import { CommandResponse, OnIncomingCall, OnIncomingUSSD, SendSmsFailed, SendSmsSuccess, SimMemoryInformation } from './types';
 
 export class Events extends EventEmitter {
-	constructor() {
+	logger?: Console | undefined
+
+	constructor(logger?: Console | undefined) {
 		super();
+		this.logger = logger
 		this.setMaxListeners(50);
 	}
 
@@ -12,11 +15,18 @@ export class Events extends EventEmitter {
 	}
 
 	on<T extends keyof EventTypes>(event: T, listener: EventTypes[T]) {
+		this.logger?.log(`${event} listener added. total: ${this.listenerCount(event)}`)
+
 		return super.on(event, listener);
 	}
 
 	once<T extends keyof EventTypes>(event: T, listener: EventTypes[T]) {
 		return super.once(event, listener);
+	}
+
+	removeListener(eventName: string | symbol, listener: (...args: any[]) => void) {
+		this.logger?.log(`${String(eventName)} listener removed. total: ${this.listenerCount(String(eventName))}`)
+		return super.removeListener(eventName, listener)
 	}
 }
 
