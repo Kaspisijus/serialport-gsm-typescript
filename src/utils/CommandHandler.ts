@@ -62,17 +62,30 @@ export class CommandHandler {
 		this.isLocked = true;
 
 		if (item instanceof Command) {
-			this.modem.logger?.log(`---------\nexecuteCMD: ${item.ATCommand}, timeout: ${item.timeout}`)
+			this.modem.logger?.log("---------\nexecuteCMD: ", item.ATCommand)
 			await this.executeCMD(item)
 				.then((res) => {
-					this.modem.logger?.log(`finished: ${res}`)
+					this.modem.logger?.log("res: ", res)
+					return res
+
+				}).catch((err) => {
+					this.modem.logger?.log("err: ", err)
+					return err
 				})
-				.catch((err) => {
-					this.modem.logger?.log(`error: ${err}`)
-				})
+
 		} else {
 			for (const cmd of item.cmds) {
-				const result = await this.executeCMD(cmd);
+
+				this.modem.logger?.log("---------\nexecuteCMDs: ", cmd.ATCommand)
+				const result = await this.executeCMD(cmd)
+					.then((res) => {
+						this.modem.logger?.log("res: ", res)
+						return res
+
+					}).catch((err) => {
+						this.modem.logger?.log("err: ", err)
+						return err
+					})
 
 				if (result instanceof Error && item.cancelOnFailure) {
 					if (item.onFailed) {
@@ -100,7 +113,6 @@ export class CommandHandler {
 	 * @returns The command response or an error if the command fails.
 	 */
 	private async executeCMD(cmd: Command) {
-
 		const result = await new Promise((resolve: (result: CommandResponse | Error) => void) => {
 			if (cmd.deprecated) {
 				return resolve(new Error('Command marked as deprecated'));
@@ -158,8 +170,6 @@ export class CommandHandler {
 	 * @param received The received data from the modem.
 	 */
 	private dataReceived(received: string) {
-		this.modem.logger?.log(`dataReceived: ${received}`)
-
 		this.receivedData += received;
 		const parts = this.receivedData.split('\r\n');
 		this.receivedData = parts.pop() || '';
