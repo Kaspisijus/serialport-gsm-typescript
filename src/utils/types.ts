@@ -11,8 +11,9 @@ export type ModemOptions = {
 	customInitCommand: string | null;
 	autoInitOnOpen: boolean;
 	cnmiCommand: string;
+	logger?: Console
 };
-
+console.log()
 /*
  * Public function types and event types
  */

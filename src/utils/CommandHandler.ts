@@ -93,6 +93,8 @@ export class CommandHandler {
 	 * @returns The command response or an error if the command fails.
 	 */
 	private async executeCMD(cmd: Command) {
+		this.modem.logger?.log(`executeCMD: ${cmd.ATCommand}`)
+
 		const result = await new Promise((resolve: (result: CommandResponse | Error) => void) => {
 			if (cmd.deprecated) {
 				return resolve(new Error('Command marked as deprecated'));
@@ -150,6 +152,8 @@ export class CommandHandler {
 	 * @param received The received data from the modem.
 	 */
 	private dataReceived(received: string) {
+		this.modem.logger?.log(`dataReceived: ${received}`)
+
 		this.receivedData += received;
 		const parts = this.receivedData.split('\r\n');
 		this.receivedData = parts.pop() || '';

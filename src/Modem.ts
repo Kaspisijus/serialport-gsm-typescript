@@ -14,6 +14,7 @@ export class Modem {
 	private readonly communicator: Communicator;
 	private readonly events = new Events();
 	private readonly cmdHandler: CommandHandler;
+	logger: Console | undefined;
 
 	constructor(communicator: Communicator, options: Partial<ModemOptions> = {}) {
 		this.options = {
@@ -22,14 +23,18 @@ export class Modem {
 			enableConcatenation: options.enableConcatenation ?? true,
 			customInitCommand: options.customInitCommand ?? null,
 			autoInitOnOpen: options.autoInitOnOpen ?? true,
-			cnmiCommand: options.cnmiCommand ?? 'AT+CNMI=2,1,0,2,1'
+			cnmiCommand: options.cnmiCommand ?? 'AT+CNMI=2,1,0,2,1',
+			logger: options.logger
 		};
+		this.logger = options.logger
 
 		this.communicator = communicator;
 		this.cmdHandler = new CommandHandler(this, this.communicator, this.events);
 
 		this.on('onNewSms', (id) => this.options.deleteSmsOnReceive && this.deleteSms(id).catch());
 	}
+
+
 
 	/*
 	 * ================================================
@@ -579,7 +584,7 @@ export class Modem {
 		const response = await simplifyResponse(this.executeATCommand('ATH', prio));
 
 		if (resultCode(response) !== 'OK') {
-			throw new ModemError(this, 'The hang up of the call failed!');
+			throw new ModemError(this, `The hang up of the call failed with response: [${response}]`);
 		}
 	}
 

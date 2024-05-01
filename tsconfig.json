@@ -4,7 +4,7 @@
 		"module": "commonjs",
 		"declaration": true,
 		"sourceMap": true,
-		"outDir": "./dist",
+		"outDir": "../serialport-gsm-ts-lib",
 		"strict": true,
 		"noImplicitAny": true,
 		"alwaysStrict": true,

@@ -22,13 +22,13 @@
 		"typescript": "^5.3.3"
 	},
 	"scripts": {
-		"build": "yarn build:lib && yarn build:docs",
+		"build": "npm run build:lib && npm run build:docs",
 		"build:lib": "tsc",
 		"build:docs": "typedoc --entryPoints src/index.ts --out docs --excludePrivate --customCss typedoc.css",
-		"lint": "yarn lint:format && yarn lint:code",
+		"lint": "npm lint:format && yarn lint:code",
 		"lint:code": "eslint src --ext .ts",
 		"lint:format": "prettier --check .",
-		"prepack": "yarn build:lib"
+		"prepack": "npm build:lib"
 	},
 	"engines": {
 		"node": ">=16.0.0"
